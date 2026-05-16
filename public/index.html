@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNAPSE CORE | AI Data Intelligence Platform</title>
+    <meta name="description" content="Next-generation intelligent API infrastructure for real-time AI data operations.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- System Initialization Preloader -->
+    <div id="preloader">
+        <div class="loader-content">
+            <div class="title-container" style="margin-bottom: 2rem;">
+                <h2 class="hero-title" style="font-size: 2.5rem; margin-bottom: 0;">SYNAPSE CORE</h2>
+            </div>
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="loader-logs">
+                <p>> Booting Neural Network...</p>
+                <p>> Mounting Synapse Core...</p>
+                <p>> Establishing API handshake...</p>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="neural-canvas"></canvas>
+    <div class="ambient-light" style="top: 10%; left: 10%;"></div>
+    <div class="ambient-light" style="bottom: 10%; right: 10%; background: radial-gradient(circle, rgba(0, 229, 255, 0.05) 0%, transparent 70%);"></div>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="title-container">
+                <h1 class="hero-title">SYNAPSE CORE</h1>
+            </div>
+            <p class="hero-subtitle">Next-generation intelligent API infrastructure.</p>
+            <div class="hero-actions">
+                <button class="btn btn-primary" onclick="scrollToDashboard()">Initialize Dashboard</button>
+                <button class="btn btn-outline" onclick="window.open('/api/nodes', '_blank')">View Raw API</button>
+            </div>
+            <div class="scanline"></div>
+        </section>
+
+        <!-- Stats Overview -->
+        <section class="stats-overview" style="display: flex; gap: 1rem; margin-bottom: 2rem; margin-top: 2rem; position: relative; z-index: 10;">
+            <div class="card" style="flex: 1; text-align: center;">
+                <span style="font-size: 0.7rem; opacity: 0.5;">CPU LOAD</span>
+                <h2 class="neural-blue" id="cpu-stat">24%</h2>
+            </div>
+            <div class="card" style="flex: 1; text-align: center;">
+                <span style="font-size: 0.7rem; opacity: 0.5;">MEMORY</span>
+                <h2 class="quantum-violet" id="mem-stat">1.2GB</h2>
+            </div>
+            <div class="card" style="flex: 1; text-align: center;">
+                <span style="font-size: 0.7rem; opacity: 0.5;">ACTIVE TASKS</span>
+                <h2 class="neural-blue" id="task-stat">128</h2>
+            </div>
+        </section>
+
+        <!-- Dashboard -->
+        <section id="dashboard" class="dashboard">
+            <!-- System Health -->
+            <div class="card col-4">
+                <h3>System Health</h3>
+                <div id="health-stats" style="margin-top: 1.5rem;">
+                    <p style="margin-bottom: 0.5rem;">Uptime: <span id="uptime-val" class="neural-blue">Loading...</span></p>
+                    <p style="margin-bottom: 0.5rem;">Network Load: <span id="load-val" class="neural-blue">Loading...</span></p>
+                    <p>Status: <span class="status-pill status-active">Operational</span></p>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <canvas id="health-chart" height="100"></canvas>
+                </div>
+            </div>
+
+            <!-- Live Terminal -->
+            <div class="card col-8">
+                <h3>Live Data Stream</h3>
+                <div id="terminal" class="terminal" style="margin-top: 1rem;">
+                    <div class="terminal-line">> Connection established...</div>
+                    <div class="terminal-line">> Awaiting neural handshaking...</div>
+                    <div class="terminal-line">> Synapse Core initialized.</div>
+                </div>
+            </div>
+
+            <!-- CRUD Dashboard -->
+            <div class="card col-12">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h3>Neural Node Operations</h3>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-outline btn-sm" style="border-color: #ff4444; color: #ff4444" onclick="openPurgeAllModal()">Tactical Purge All</button>
+                        <button class="btn btn-primary btn-sm" onclick="openCreateModal()">Add New Node</button>
+                    </div>
+                </div>
+                
+                <div id="node-list">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Custom Purge Modal -->
+    <div id="purge-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-content card" style="border-color: #ff4444; box-shadow: 0 0 30px rgba(255, 68, 68, 0.2);">
+            <h3 style="color: #ff4444">CRITICAL ACTION</h3>
+            <p style="margin: 1.5rem 0; opacity: 0.8;">Are you sure you want to deactivate and purge the selected neural node(s)? This action is irreversible.</p>
+            <div style="display: flex; gap: 1rem;">
+                <button id="confirm-purge-btn" class="btn btn-primary" style="background: #ff4444; color: #fff;">Execute Purge</button>
+                <button class="btn btn-outline" onclick="closePurgeModal()">Abort</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Modal (Simple for now) -->
+    <div id="node-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-content card">
+            <h3 id="modal-title">Create Neural Node</h3>
+            <div style="margin-top: 1.5rem;">
+                <input type="text" id="node-name" placeholder="Node Name" class="input-field">
+                <select id="node-type" class="input-field">
+                    <option value="Processing">Processing</option>
+                    <option value="Storage">Storage</option>
+                    <option value="Routing">Routing</option>
+                    <option value="AI-Core">AI-Core</option>
+                </select>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button class="btn btn-primary" onclick="handleNodeSubmit()">Submit</button>
+                    <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .input-field {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 0.8rem;
+    color: var(--cyber-silver);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-family: 'Inter', sans-serif;
+    appearance: none; /* Reset for custom feel */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300E5FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+}
+
+.input-field option {
+    background: #040404;
+    color: #E6F7FF;
+    padding: 10px;
+}
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            width: 400px;
+            padding: 2rem;
+        }
+    </style>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
